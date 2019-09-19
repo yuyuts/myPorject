@@ -6,7 +6,8 @@ public class Main {
 
     public static Connection db = null;
     public static void main(String[] args){
-    openDatabse("Databaset.db");
+    openDatabse("firstDatabase.db");
+
     closeDatabase();
     }
     private static void openDatabse(String dbFile) {
@@ -15,7 +16,7 @@ public class Main {
             SQLiteConfig = new SQLiteConfig();
             config.enforceForeignKeys(true);
             db = DriverManager.getConnection("jdbc:sqlite:resources/" + dbFile, config.toProperties());
-            System.out.println("Database Connection Sucessfully Established");
+            System.out.println("Database Connection Successfully Established");
 
 
         } catch (Exception exception) {
