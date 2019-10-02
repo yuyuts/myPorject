@@ -44,7 +44,7 @@ public class Main {
         try{
             PreparedStatement ps= Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamName FROM Players");
             ResultSet results = ps.executeQuery();
-            while(result.next()){
+            while(results.next()){
                 int playerID = results.getInt(1);
                 String playerIGN = results.getString(2);
                 String firstName = results.getString(3);
@@ -57,4 +57,5 @@ public class Main {
             System.out.println("Database error:" + exception.getMessage());
         }
     }
+    public static void
 }
