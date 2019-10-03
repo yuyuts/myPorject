@@ -1,3 +1,11 @@
+package Servers;
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.sqlite.SQLiteConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,12 +16,6 @@ public class Main {
 
     public static Connection db = null;
 
-    public static void main(String[] args) {
-        openDatabse("LeagueDatabase.db");
-
-
-        closeDatabase();
-    }
 
     private static void openDatabse(String dbFile) {
         try {
@@ -26,6 +28,7 @@ public class Main {
 
         } catch (Exception exception) {
             System.out.println("Database Connection Error" + exception.getMessage());
+
         }
 
     }
@@ -50,6 +53,11 @@ public class Main {
                 String firstName = results.getString(3);
                 String Nationality = results.getString(4);
                 String teamName = results.getString(5);
+                System.out.println(Nationality);
+                System.out.println(playerID);
+                System.out.println(firstName);
+                System.out.println(playerIGN);
+                System.out.println(teamName);
 
             }
 
@@ -57,5 +65,27 @@ public class Main {
             System.out.println("Database error:" + exception.getMessage());
         }
     }
-    public static void
+    public static void main(String[] args) {
+
+        openDatabse("LeagueDatabase.db");
+
+        ResourceConfig config = new ResourceConfig();
+        config.packages("Controllers");
+        config.register(MultiPartFeature.class);
+        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
+
+        Server server = new Server(8081);
+        ServletContextHandler context = new ServletContextHandler(server, "/");
+        context.addServlet(servlet, "/*");
+
+        try {
+            server.start();
+            System.out.println("Server successfully started.");
+            server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
