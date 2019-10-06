@@ -65,6 +65,8 @@ public class Main {
             System.out.println("Database error:" + exception.getMessage());
         }
     }
+
+
     public static void main(String[] args) {
 
         openDatabse("LeagueDatabase.db");
