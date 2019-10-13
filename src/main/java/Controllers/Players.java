@@ -5,6 +5,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
@@ -36,36 +37,27 @@ public class Players {
             return "{\"error\":\"unable to list items, please see server console for more info.\"}";
         }
     }
-    @POST
-    @Path("new")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String addPlayers(){
-        @FormDataParam("playerID") Integer playerID, @FormDataParam("playerIGN") String playerIGN, @FormDataParam("firstName") String firstName, @FormDataParam("Nationality") String Nationality, @FormDataParam("teamName") String teamName)
-        {
-            try{
-                if (playerID == null||playerIGN == null ||firstName == null|| Nationality == null|| teamName == null ){
-                    throw new Exception("One or more data parameters are missing in the HTTP request");
 
-                }
-                System.out.println("player/new playerID ="+ playerID);
-                PreparedStatement ps == Main.db.prepareStatement("INSERT INTO  Players(playerID, playerIGN, firstName, Nationality, teamName )VALUES (?,?,?,?,?)");
-                ps.setInt(1,playerID);
-                ps.setString(2,playerIGN);
-                ps.setString(3,firstName);
-                ps.setString(4,Nationality);
-                ps.setString(5,teamName);
-                ps.execute();
-                return"{\"status\":\"OK\"}";
-            } catch (Exception exception){
-                System.out.println("Database error:"+exception.getMessage());
-                return "{\"error\":\"Unable to create new item, please see server console for more info.\"}";
-            }
+    public static void insertPlayer(int playerID, String playerIGN, String firstName, String Nationality) {//calls for these parameters
+        try {
+            PreparedStatement ps = Main.db.prepareStatement(
+                    "Insert INTO playerID(playerID, playerIGN, firstName, Nationality)VALUES (?.?.?.?)");//sql code to insert values into the fields
+            ps.setInt(1, playerID);//prepared statement 1 is the value going to the first "?" therefore the player ID
+            ps.setString(2, playerIGN);//prepared statement 2 is the value going to the second "?" therefore the playerIGN
+            ps.setString(3, firstName);//prepared statement 3 is the value going to the third "?" therefore the firstName
+            ps.setString(4, Nationality);//prepared statement 4 is the value going to the fourth "?" therefore Nationality
 
+            ps.execute();//executes the prepared statements
+
+
+        } catch (Exception exception) { //if the parameters dont work or an database error
+            System.out.println("Database Error:" + exception.getMessage());//the database error message
         }
-
-
     }
+
 }
+
+
+
 
 

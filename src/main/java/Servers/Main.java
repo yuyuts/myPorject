@@ -43,28 +43,6 @@ public class Main {
 
     }
 
-    public static void listPlayers(){
-        try{
-            PreparedStatement ps= Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamName FROM Players");
-            ResultSet results = ps.executeQuery();
-            while(results.next()){
-                int playerID = results.getInt(1);
-                String playerIGN = results.getString(2);
-                String firstName = results.getString(3);
-                String Nationality = results.getString(4);
-                String teamName = results.getString(5);
-                System.out.println(Nationality);
-                System.out.println(playerID);
-                System.out.println(firstName);
-                System.out.println(playerIGN);
-                System.out.println(teamName);
-
-            }
-
-        } catch (Exception exception){
-            System.out.println("Database error:" + exception.getMessage());
-        }
-    }
 
 
     public static void main(String[] args) {
@@ -88,6 +66,5 @@ public class Main {
             e.printStackTrace();
         }
     }
-
 
 }
