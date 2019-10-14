@@ -12,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import static Controllers.Players.deletePlayer;
+
 public class Main {
 
     public static Connection db = null;
@@ -58,6 +60,7 @@ public class Main {
         ServletContextHandler context = new ServletContextHandler(server, "/");
         context.addServlet(servlet, "/*");
 
+
         try {
             server.start();
             System.out.println("Server successfully started.");
@@ -65,6 +68,9 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        }
     }
 
-}
+
