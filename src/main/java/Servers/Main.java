@@ -19,7 +19,7 @@ public class Main {
     public static Connection db = null;
 
 
-    private static void openDatabse(String dbFile) {
+    private static void openDatabase(String dbFile) {
         try {
             Class.forName("org.sqlite.JDBC");
             SQLiteConfig config = new SQLiteConfig();
@@ -49,7 +49,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        openDatabse("LeagueDatabase.db");
+        openDatabase("LeagueDatabase.db");
 
         ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
@@ -68,6 +68,10 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
 
 
         }

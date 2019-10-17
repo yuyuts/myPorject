@@ -14,12 +14,11 @@ public class Players {
     @GET// GET  method for API since its listing
     @Path("list") //This is the path command
     @Produces(MediaType.APPLICATION_JSON)//we are using JSON
-
     public String listPlayers() {
         System.out.println("players/list"); // Additional Print Statements for debugging purposes
         JSONArray list = new JSONArray(); //SIMPLE JSON QUERY - A new JSON Object is created
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamID FROM Player");//sql Code
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamID FROM Players");//sql Code
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 JSONObject item = new JSONObject();
@@ -40,7 +39,7 @@ public class Players {
     public static void insertPlayer(int playerID, String playerIGN, String firstName, String Nationality) {//calls for these parameters
         try {
             PreparedStatement ps = Main.db.prepareStatement(
-                    "Insert INTO playerID(playerID, playerIGN, firstName, Nationality)VALUES (?.?.?.?)");//sql code to insert values into the fields
+                    "Insert INTO Players(playerID, playerIGN, firstName, Nationality)VALUES (?.?.?.?)");//sql code to insert values into the fields
             ps.setInt(1, playerID);//prepared statement 1 is the value going to the first "?" therefore the player ID
             ps.setString(2, playerIGN);//prepared statement 2 is the value going to the second "?" therefore the playerIGN
             ps.setString(3, firstName);//prepared statement 3 is the value going to the third "?" therefore the firstName
@@ -55,7 +54,7 @@ public class Players {
     }
     public static void deletePlayer(int playerID){//delete player method
         try{
-            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Things WHERE playerID = ?");//SQL Statement saying to delete everything with the playerID
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Players WHERE playerID = ?");//SQL Statement saying to delete everything with the playerID
             ps.setInt(1,playerID);//The playerID to remove
             ps.execute();//executes
             System.out.println("Success:");//testing if the code works
@@ -66,20 +65,20 @@ public class Players {
         }
     }
 
-    public static void listPlayes(){
+    public static void listPlayer(){
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN, firstName, Nationality,t eamID FROM Player");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN, firstName, Nationality,teamID FROM Players");
             ResultSet results = ps.executeQuery();
             while(results.next()){
                 int playerID = results.getInt(1);
                 String playerIGN = results.getString(2);
-                String firstName = results.getString(8);
-                String Nationality = results.getString(3);
-                int teamID = results.getInt(4);
-                System.out.println("ID:"+playerID +", ");
-                System.out.println("firstName:"+firstName+",");
-                System.out.println("Nationality"+Nationality+",");
-                System.out.println("TEAMID"+teamID+".");
+                String firstName = results.getString(3);
+                String Nationality = results.getString(4);
+                int teamID = results.getInt(5);
+                System.out.println("ID:"+playerID +",1");
+                System.out.println("firstName:"+firstName+"2");
+                System.out.println("Nationality"+Nationality+"3");
+                System.out.println("teamID"+teamID+"4");
 
             }
 
@@ -87,9 +86,26 @@ public class Players {
             System.out.println("Database error");
         }
     }
-    public static void main(String[] args){
-        listPlayes();
+
+    public static void updatePlayers(int playerID, String playerIGN, String Nationality,int teamID, int regionID, int playerAccountID, int playerStatisticsID){ //update Player
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Players SET playerID = ?, playerIGN =?, Nationality = ?, teamID=?, regionID =?, playerAccountID = ?. playerStatisticsID =?");
+            ps.setInt(1,playerID);
+            ps.setString(2, playerIGN);
+            ps.setString(3,Nationality);
+            ps.setInt(4,teamID);
+            ps.setInt(5,regionID);
+            ps.setInt(5,playerAccountID);
+            ps.setInt(6,playerStatisticsID);
+
+            ps.execute();
+            System.out.println("Successfully Updated");
+
+        }catch (Exception exception){
+            System.out.println("Database Error:");
+        }
     }
+
 
 
 
