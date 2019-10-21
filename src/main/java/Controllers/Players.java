@@ -105,9 +105,9 @@ public class Players {
             System.out.println("Database Error:");
         }
     }
-    public static void main(String[] args){
-        listPlayer();
-    }
+
+
+
 
 
 
