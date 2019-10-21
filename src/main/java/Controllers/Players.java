@@ -18,7 +18,7 @@ public class Players {
         System.out.println("players/list"); // Additional Print Statements for debugging purposes
         JSONArray list = new JSONArray(); //SIMPLE JSON QUERY - A new JSON Object is created
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamID FROM Players");//sql Code
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,teamID,teamBio   FROM Players");//sql Code
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 JSONObject item = new JSONObject();
@@ -67,14 +67,14 @@ public class Players {
 
     public static void listPlayer(){
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN, firstName, Nationality,teamID FROM Players");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN, firstName, Nationality,teamID FROM Players WHERE playerID = ?");
             ResultSet results = ps.executeQuery();
             while(results.next()){
                 int playerID = results.getInt(1);
                 String playerIGN = results.getString(2);
                 String firstName = results.getString(3);
                 String Nationality = results.getString(4);
-                int teamID = results.getInt(5);
+                int teamID = results.getInt(6);
                 System.out.println("ID:"+playerID +",1");
                 System.out.println("firstName:"+firstName+"2");
                 System.out.println("Nationality"+Nationality+"3");
