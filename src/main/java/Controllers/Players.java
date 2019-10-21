@@ -89,7 +89,7 @@ public class Players {
 
     public static void updatePlayers(int playerID, String playerIGN, String Nationality,int teamID, int regionID, int playerAccountID, int playerStatisticsID){ //update Player
         try{
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Players SET playerID = ?, playerIGN =?, Nationality = ?, teamID=?, regionID =?, playerAccountID = ?. playerStatisticsID =?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Players SET playerID = ?, playerIGN =?, Nationality = ?, teamID=?, regionID =?, playerAccountID = ?. playerStatisticsID =? WHERE playerID = ?");
             ps.setInt(1,playerID);
             ps.setString(2, playerIGN);
             ps.setString(3,Nationality);
@@ -104,6 +104,9 @@ public class Players {
         }catch (Exception exception){
             System.out.println("Database Error:");
         }
+    }
+    public static void main(String[] args){
+        listPlayer();
     }
 
 
