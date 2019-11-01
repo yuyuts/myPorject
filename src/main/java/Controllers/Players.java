@@ -75,10 +75,10 @@ public class Players {
                 String firstName = results.getString(3);
                 String Nationality = results.getString(4);
                 int teamID = results.getInt(6);
-                System.out.println("ID:"+playerID +",1");
-                System.out.println("firstName:"+firstName+"2");
-                System.out.println("Nationality"+Nationality+"3");
-                System.out.println("teamID"+teamID+"4");
+                System.out.println("ID:"+playerID +",,");
+                System.out.println("firstName:"+firstName+",");
+                System.out.println("Nationality"+Nationality+",");
+                System.out.println("teamID"+teamID+"\n");
 
             }
 
@@ -90,13 +90,13 @@ public class Players {
     public static void updatePlayers(int playerID, String playerIGN, String Nationality,int teamID, int regionID, int playerAccountID, int playerStatisticsID){ //update Player
         try{
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Players SET playerID = ?, playerIGN =?, Nationality = ?, teamID=?, regionID =?, playerAccountID = ?. playerStatisticsID =? WHERE playerID = ?");
-            ps.setInt(1,playerID);
-            ps.setString(2, playerIGN);
-            ps.setString(3,Nationality);
-            ps.setInt(4,teamID);
-            ps.setInt(5,regionID);
+            ps.setString(1, playerIGN);
+            ps.setString(2,Nationality);
+            ps.setInt(3,teamID);
+            ps.setInt(4,regionID);
             ps.setInt(5,playerAccountID);
             ps.setInt(6,playerStatisticsID);
+            ps.setInt(7,playerID);
 
             ps.execute();
             System.out.println("Successfully Updated");
