@@ -10,7 +10,7 @@ public class Users{
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO USERS(userID, userName, userPassword, userEmail)VALUES (?,?,?,?)");//SQL STATEMENT TO CREATE A NEW USER
             ps.setInt(1,userID);//Pepared statement which links to the first ?
-            ps.setString(2,userName);//prepared statement which links to the second ?
+            ps.setString(2,userName);//prepared statement which links to the second ? d
             ps.setString(3,userPassword);//prepared statement which links to the third ?
             ps.setString(4, userEmail);//prepared statement which links to the fourth ?
             ps.execute();//executes the prepared statement
