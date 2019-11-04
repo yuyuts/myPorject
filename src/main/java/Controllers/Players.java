@@ -36,14 +36,15 @@ public class Players {
         }
     }
 
-    public static void insertPlayer(int playerID, String playerIGN, String firstName, String Nationality) {//calls for these parameters
+    public static void insertPlayer(int playerID, String playerIGN, String firstName, String Nationality,int teamID) {//calls for these parameters
         try {
             PreparedStatement ps = Main.db.prepareStatement(
-                    "Insert INTO Players(playerID, playerIGN, firstName, Nationality)VALUES (?.?.?.?)");//sql code to insert values into the fields
+                    "Insert INTO Players(playerID, playerIGN, firstName, Nationality,teamID)VALUES (?.?.?.?,?)");//sql code to insert values into the fields
             ps.setInt(1, playerID);//prepared statement 1 is the value going to the first "?" therefore the player ID
             ps.setString(2, playerIGN);//prepared statement 2 is the value going to the second "?" therefore the playerIGN
             ps.setString(3, firstName);//prepared statement 3 is the value going to the third "?" therefore the firstName
             ps.setString(4, Nationality);//prepared statement 4 is the value going to the fourth "?" therefore Nationality
+            ps.setInt(5,teamID);//prepared statement 5 is the value going into the fight "?" therefore teamID
 
             ps.execute();//executes the prepared statements
             System.out.println("inserted");
