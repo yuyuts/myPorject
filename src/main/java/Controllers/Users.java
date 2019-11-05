@@ -57,10 +57,7 @@ public class Users{
                 System.out.println("User Name:"+ userName +",");///OUTPUTS USERNAME
                 System.out.println("User Password:"+ userPassword+",");//OUTPUTS USER PASSWORD
                 System.out.println("User Email"+ userEmail+"\n");//OUTPUTS USER EMAIL
-
-
             }
-
         } catch(Exception exception){
             System.out.println("Database Error");//SOUT which if the code doesnt work will be outputted
         }

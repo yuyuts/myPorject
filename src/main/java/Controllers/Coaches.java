@@ -1,11 +1,126 @@
 package Controllers;
 
 import Servers.Main;
+import com.sun.jersey.multipart.FormDataParam;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.validation.constraints.Positive;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Coaches {
+    //APIS
+    //GETTING ALL
+    @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listCoach(){
+        System.out.println("Coaches/list");
+        JSONArray list = new JSONArray();
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachFirstName, coachLastName,teamID FROM COACHES");
+            ResultSet results= ps.executeQuery();
+            while(results.next()){
+                JSONObject item = new JSONObject();
+                item.put("coachID",results.getInt(1);
+                item.put("coachFirstName",results.getString(2));
+                item.put("coachLastName",results.getString(3));
+                item.put("teamID",results.getString(4));
+            }
+            return list.toString();
+        }catch (Exception exception){
+            System.out.println("Database Error:");
+            return"{\"error\":\"Unable to list items,please see server console for more info.\"}";
+        }
+    }
+    //GETTING ONE
+    @GET
+    @Path("get/{coachID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCoach(@PathParam("coachID") Integer coachID){
+        if(coachID == null) {
+            throw new Exception("coachID is missing from the http request's url");
+        }
+        System.out.println("Coaches/get/" + coachID);
+        JSONObject item = new JSONObject();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachFirstName, coachLastName, teamID FROM Coaches WHERE coachID = ?");
+            ps.setInt(1, coachID);
+            ResultSet results = ps.executeQuery();
+            if (results.next()) {
+                item.put("coachID", coachID);
+                item.put("coachFirstName", results.getString(1));
+                item.put("coachLastName", results.getString(2));
+                item.put("teamID", results.getInt(3));
+            }
+            return item.toString();
+        } catch (Exception exception) {
+            System.out.println("Database Error");
+            return"{\"error\":\"Unable to get item, please see server console for more info.\"}";
+        }
+    }
+
+
+    //insertCoach
+    @POST
+    @Path("new")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String insertCoach(
+            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID) {
+        try {
+            if (coachID == null || coachFirstName == null || coachLastName == null || teamID == null) {
+                throw new Exception("One or more form data parameters are missing in the HTTP Request");
+            }
+            System.out.println("Coaches/new coachID =" + coachID);
+
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID, coachFirstName, coachLastName, teamID) VALUES (?,?,?,?)");
+            ps.setInt(1, coachID);
+            ps.setString(2, coachFirstName);
+            ps.setString(3, coachLastName);
+            ps.setInt(4, teamID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        } catch (Exception exception) {
+            System.out.println("Database Error");
+            return "{\"error\":\"Unable to create new item, please see server console for more info.\"}";
+        }
+    }
+
+    //Update Coach
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateCoach(
+            @FormDataParam("coachID") Integer coachID,@FormDataParam("coachFirstName") String coachFirstName,@FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID){
+        try{
+            if(coachID == null || coachFirstName == null || coachLastName == null || teamID == null){
+                throw new Exception("One or more form data parameters are missing from the HTTP request.");
+            }
+            System.out.println("Coaches/update id= "+ coachID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Coaches SET coachID = ?, coachFirstName =?, coachLastName =?, teamID = ?");
+            ps.setInt(1,coachID);
+            ps.setString(2,coachFirstName);
+            ps.setString(3, coachLastName);
+            ps.setInt(4,teamID);
+            ps.execute();
+            return "{\"status\":\"OK\"}";
+        }catch (Exception exception){
+            System.out.println("Database Error");
+            return "{\"error\":\"Unable to update item, please see the console for more info.\"}";
+        }
+    }
+
+
+
+
+
+    //METHODS
+
     public static void insertCoach(int coachID, String coachFirstName, String coachLastName, int teamID) { //calls for these parameters
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID, coachFirstName, coachLastName,teamID) VALUES (?,?,?,?)"); //prepared statement with the SQL CODE to insertCoach
