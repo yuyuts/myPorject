@@ -8,7 +8,7 @@ public class Team{
     public static void insertTeam(int teamID, String teamName,String Earnings, String teamBio, int teamAccountID){//METHOD to create a new team
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams(teamID, teamName, Earnings, teamBio, teamAccountID) VALUES(?,?,?,?,?)");//SQL STATEMENT TO CREATE A NEW TEAM
-            ps.setInt(1,teamID);// prepared statement lonks to the first ?
+            ps.setInt(1,teamID);// prepared statement looks to the first ?
             ps.setString(2,teamName);//prepared statement which links to the second ?
             ps.setString(3,Earnings);//prepared statement which links to the third ?
             ps.setString(4,teamBio);//prepared statement which links to the fourth ?
@@ -20,14 +20,15 @@ public class Team{
         }
     }
 
-    public static void updateTeam(int teamID, String teamName, String Earnings, String teamBio, int teamAccountID){ //METHOD to update a team
+    public static void updateTeam(int teamID, String teamName, String Earnings, String teamBio, int teamAccountID,int standingPo){ //METHOD to update a team
         try{
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE TEAMS SET teamName = ?, Earnings =?, teamBio =?, teamAccountID =? WHERE teamID = ?");//SQL UPDATES TEAM WITH THE TEAMID = ?
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE TEAMS SET teamName = ?, Earnings =?, teamBio =?, teamAccountID =?, stadningPo = ?WHERE teamID = ?");//SQL UPDATES TEAM WITH THE TEAMID = ?
             ps.setString(1,teamName);//prepared statement which links to the first ?
             ps.setString(2,Earnings);//prepared statement which links to the second ?
             ps.setString(3,teamBio);//prepared statement which links to the third ?
             ps.setInt(4,teamAccountID);//prepared statement which link to the fourth ?
             ps.setInt(5,teamID);;//prepared statement which links to the fifith ?
+            ps.setInt(6,standingPo);//prepared statement which links to the sixth ?
             ps.execute();//executes the prepared statements
             System.out.println("Successfully updated");//SOUT will output to show that is has successfully updated the team
         }catch(Exception exception){
@@ -48,13 +49,14 @@ public class Team{
 
     public static void listTeams(){//METHOD TO LIST THE TEAMS
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teambio FROM Teams");//SQL Statement to SELECT all the collumns from TEAMS
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teambio, standingPo FROM Teams");//SQL Statement to SELECT all the collumns from TEAMS
             ResultSet results = ps.executeQuery();//IMPORT RESULT SET
             while(results.next()) {//while loop
                 int teamID = results.getInt(1);//sets the teamID to equal what ever is on the first column
                 String teamName = results.getString(2);//sets the teamName to equal to what ever is on the second column
                 String Earnings = results.getString(3);//sets the Earnings to equal to what ever is on the third column
                 String teamBio = results.getString(4);//sets the teamBio to equal to what ever is on the fourth column
+                int standingPo = results.getInt(5);;//sets the standingPo to equal to what ever is on the fifth column
                 System.out.println("teamID:" + teamID + ",");//OUTPUTS THE TEAMID
                 System.out.println("Team Name:" + teamID + ",");//OUTPUTS THE TEAMNAME
                 System.out.println("Earnings:" + Earnings + ",");//OUTPUTS THE EARNINGS
