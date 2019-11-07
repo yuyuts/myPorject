@@ -21,14 +21,15 @@ public class Coaches {
         System.out.println("Coaches/list");
         JSONArray list = new JSONArray();
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachFirstName, coachLastName,teamID FROM COACHES");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachIGN,coachFirstName, coachLastName,teamID FROM COACHES");
             ResultSet results= ps.executeQuery();
             while(results.next()){
                 JSONObject item = new JSONObject();
                 item.put("coachID",results.getInt(1);
-                item.put("coachFirstName",results.getString(2));
-                item.put("coachLastName",results.getString(3));
-                item.put("teamID",results.getString(4));
+                item.put("CoachIGN",results.getString(2));
+                item.put("coachFirstName",results.getString(3));
+                item.put("coachLastName",results.getString(4));
+                item.put("teamID",results.getString(5));
             }
             return list.toString();
         }catch (Exception exception){
@@ -47,14 +48,15 @@ public class Coaches {
         System.out.println("Coaches/get/" + coachID);
         JSONObject item = new JSONObject();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachFirstName, coachLastName, teamID FROM Coaches WHERE coachID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN, coachFirstName, coachLastName, teamID FROM Coaches WHERE coachID = ?");
             ps.setInt(1, coachID);
             ResultSet results = ps.executeQuery();
             if (results.next()) {
                 item.put("coachID", coachID);
-                item.put("coachFirstName", results.getString(1));
-                item.put("coachLastName", results.getString(2));
-                item.put("teamID", results.getInt(3));
+                item.put("coachIGN",results.getString(1));
+                item.put("coachFirstName", results.getString(2));
+                item.put("coachLastName", results.getString(3));
+                item.put("teamID", results.getInt(4));
             }
             return item.toString();
         } catch (Exception exception) {
@@ -70,18 +72,19 @@ public class Coaches {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String insertCoach(
-            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID) {
+            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachIGN") String coachIGN, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID) {
         try {
-            if (coachID == null || coachFirstName == null || coachLastName == null || teamID == null) {
+            if (coachID == null ||coachIGN == null || coachFirstName == null || coachLastName == null || teamID == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP Request");
             }
             System.out.println("Coaches/new coachID =" + coachID);
 
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID, coachFirstName, coachLastName, teamID) VALUES (?,?,?,?)");
             ps.setInt(1, coachID);
-            ps.setString(2, coachFirstName);
-            ps.setString(3, coachLastName);
-            ps.setInt(4, teamID);
+            ps.setString(2, coachIGN);
+            ps.setString(3, coachFirstName);
+            ps.setString(4, coachLastName);
+            ps.setInt(5,teamID);
             ps.execute();
             return "{\"status\": \"OK\"}";
         } catch (Exception exception) {
@@ -96,17 +99,18 @@ public class Coaches {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateCoach(
-            @FormDataParam("coachID") Integer coachID,@FormDataParam("coachFirstName") String coachFirstName,@FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID){
+            @FormDataParam("coachID") Integer coachID,@FormDataParam("coachIGN") String coachIGN,@FormDataParam("coachFirstName") String coachFirstName,@FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID){
         try{
-            if(coachID == null || coachFirstName == null || coachLastName == null || teamID == null){
+            if(coachID == null || coachIGN == null || coachFirstName == null || coachLastName == null || teamID == null){
                 throw new Exception("One or more form data parameters are missing from the HTTP request.");
             }
             System.out.println("Coaches/update id= "+ coachID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Coaches SET coachID = ?, coachFirstName =?, coachLastName =?, teamID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Coaches SET coachID = ?,coachIGN =?,coachFirstName =?, coachLastName =?, teamID = ?");
             ps.setInt(1,coachID);
-            ps.setString(2,coachFirstName);
-            ps.setString(3, coachLastName);
-            ps.setInt(4,teamID);
+            ps.setString(2,coachIGN);
+            ps.setString(3,coachFirstName);
+            ps.setString(4, coachLastName);
+            ps.setInt(5,teamID);
             ps.execute();
             return "{\"status\":\"OK\"}";
         }catch (Exception exception){
@@ -121,7 +125,7 @@ public class Coaches {
 
     //METHODS
 
-    public static void insertCoach(int coachID, String coachFirstName, String coachLastName, int teamID) { //calls for these parameters
+    public static void insertCoach(int coachID, String coachFirstName, String coachLastName, int teamID){ //calls for these parameters
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID, coachFirstName, coachLastName,teamID) VALUES (?,?,?,?)"); //prepared statement with the SQL CODE to insertCoach
             ps.setInt(1, coachID);//links to the first ? saying to set the coachID as whatever is on the first  element on the parameter
@@ -140,6 +144,9 @@ public class Coaches {
 
     }
 
+
+
+
     public static void deleteCoach(int coachID) {//calls for the parameter of coachID for delete coach
         try {
             PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Coaches WHERE coachID = ?");//prepared statement with the SQL Code to delete coach with the PlayerID equaling what was set on the parameter
@@ -150,6 +157,7 @@ public class Coaches {
             System.out.println("Database Error");//SOUT message outputted to say that there was a problem with executing the preparedStatement
         }
     }
+
 
     public static void updateCoach(int coachID, String coachFirstName, String coachLastName, int teamID){//calls for the parameters to update coach
         try{
@@ -166,6 +174,7 @@ public class Coaches {
             System.out.println("Database Error");//SOUT to show there was an error with the database
         }
     }
+
 
     public static void listCoach(int coachID){//lists coach method with coachID as parameter
         try{

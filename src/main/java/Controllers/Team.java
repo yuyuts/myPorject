@@ -20,6 +20,7 @@ public class Team{
         }
     }
 
+
     public static void updateTeam(int teamID, String teamName, String Earnings, String teamBio, int teamAccountID,int standingPo){ //METHOD to update a team
         try{
             PreparedStatement ps = Main.db.prepareStatement("UPDATE TEAMS SET teamName = ?, Earnings =?, teamBio =?, teamAccountID =?, stadningPo = ?WHERE teamID = ?");//SQL UPDATES TEAM WITH THE TEAMID = ?
@@ -35,6 +36,7 @@ public class Team{
             System.out.println("Database Error");//SOUT which if the code doesnt work will be outputted
         }
     }
+
 
     public static void deleteTeam(int teamID){//METHOD TO DELETE TEAM
         try{
@@ -71,6 +73,7 @@ public class Team{
 
 
         }
+
     }
 
 
