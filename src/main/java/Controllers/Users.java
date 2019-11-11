@@ -1,11 +1,51 @@
 package Controllers;
 
 import Servers.Main;
+import com.sun.jersey.multipart.FormDataParam;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.UUID;
 
 public class Users{
+    //LOGIN API
+    @POST
+    @Path("login")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String userLogin(@FormDataParam("userName")String userName,@FormDataParam("userPassword") String userPassword) {
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT userPassword FROM Users WHERE userName =?");
+            ps.setString(1, userName);
+            ResultSet loginResults = ps.executeQuery();
+            if (loginResults.next()) {
+                String correctPassword = loginResults.getString(1);
+                if(userPassword.equals(correctPassword)){
+                    String token = UUID.randomUUID().toString();
+                    PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Users SET Token =? WHERE userName =?");
+                    ps1.setString(1, token);
+                    ps1.setString(2, userName);
+                    ps1.executeUpdate();
+                    return "{\"token\":\"" + token + "\"}";
+                } else {
+                    return "{\"error\":\"Incorrect password!\"}";
+
+            }
+        }else{
+                return"{\"error\":\"UNKNOWN USER!\"}";
+            }
+    }catch (Exception exception){
+            System.out.println("Database Error during user/login");
+            return "{\"error\":\"Server side error!\"}";
+        }
+
+
+    ///////////////
     public static void insertUsers(int userID, String userName, String userPassword, String userEmail){//MMEHOD TO CREATE A NEW USER
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO USERS(userID, userName, userPassword, userEmail)VALUES (?,?,?,?)");//SQL STATEMENT TO CREATE A NEW USER
