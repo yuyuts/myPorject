@@ -43,6 +43,13 @@ public class Users{
             System.out.println("Database Error during user/login");
             return "{\"error\":\"Server side error!\"}";
         }
+    @POST
+    @Path("Register")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String register{
+            @FormDataParam("userID") Integer userID, @FormDataParam("userName") String userName,
+        }
 
 
 
