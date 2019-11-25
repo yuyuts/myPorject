@@ -9,10 +9,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.sqlite.SQLiteConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import static Controllers.Players.deletePlayer;
 
 public class Main {
 
@@ -49,7 +45,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        openDatabase("LeagueDatabase.db");
+        openDatabase("Client/LeagueDatabase.db");
 
         ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
