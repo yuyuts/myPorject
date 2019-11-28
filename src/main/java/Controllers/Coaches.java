@@ -10,35 +10,36 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+@Path("Coaches/")
 public class Coaches {
     //APIS
     //GETTING ALL
-    @GET
-    @Path("list")
-    @Produces(MediaType.APPLICATION_JSON)
+    @GET//GET REQUEST
+    @Path("list") //declaring its a list
+    @Produces(MediaType.APPLICATION_JSON)//using json
     public String listCoach(){
-        System.out.println("Coaches/list");
-        JSONArray list = new JSONArray();
+        System.out.println("Coaches/list");//API PATH
+        JSONArray list = new JSONArray();//creating new JSON array
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachIGN,coachFirstName, coachLastName,teamID FROM COACHES");
-            ResultSet results= ps.executeQuery();
-            while(results.next()){
-                JSONObject item = new JSONObject();
-                item.put("coachID",results.getInt(1);
-                item.put("CoachIGN",results.getString(2));
-                item.put("coachFirstName",results.getString(3));
-                item.put("coachLastName",results.getString(4));
-                item.put("teamID",results.getString(5));
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachIGN,coachFirstName, coachLastName,teamID FROM COACHES");//SELECT SQL STATEMENT
+            JSONObject item = new JSONObject();
+            ResultSet results= ps.executeQuery();//PREPARED STATEMENTS
+            while(results.next()){//while loop, stops when there are no more coaches
+                item.put("coachID",results.getInt(1));//gets the coachID
+                item.put("CoachIGN",results.getString(2));//gets the coachIGN
+                item.put("coachFirstName",results.getString(3));//gets the coachFirstName
+                item.put("coachLastName",results.getString(4));//gets the coachLastName
+                item.put("teamID",results.getInt(5));//gets the teamID
+                list.add(item);
             }
             return list.toString();
         }catch (Exception exception){
-            System.out.println("Database Error:");
+            System.out.println("Database Error:"); //ERROR MESSAGE
             return"{\"error\":\"Unable to list items,please see server console for more info.\"}";
         }
     }
     //GETTING ONE
-    @GET
+   /* @GET
     @Path("get/{coachID}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getCoach(@PathParam("coachID") Integer coachID){
@@ -64,7 +65,7 @@ public class Coaches {
             return"{\"error\":\"Unable to get item, please see server console for more info.\"}";
         }
     }
-
+*/
 
     //insertCoach
     @POST
@@ -79,7 +80,7 @@ public class Coaches {
             }
             System.out.println("Coaches/new coachID =" + coachID);
 
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID, coachFirstName, coachLastName, teamID) VALUES (?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID,coachIGN, coachFirstName, coachLastName, teamID) VALUES (?,?,?,?,?)");
             ps.setInt(1, coachID);
             ps.setString(2, coachIGN);
             ps.setString(3, coachFirstName);

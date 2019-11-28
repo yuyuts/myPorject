@@ -25,7 +25,7 @@ public class Users{
             ResultSet loginResults = ps.executeQuery();
             if (loginResults.next()) {
                 String correctPassword = loginResults.getString(1);
-                if(userPassword.equals(correctPassword)){
+                if (userPassword.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();
                     PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Users SET Token =? WHERE userName =?");
                     ps1.setString(1, token);
@@ -35,25 +35,17 @@ public class Users{
                 } else {
                     return "{\"error\":\"Incorrect password!\"}";
 
+                }
+            } else {
+                return "{\"error\":\"UNKNOWN USER!\"}";
             }
-        }else{
-                return"{\"error\":\"UNKNOWN USER!\"}";
-            }
-    }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("Database Error during user/login");
             return "{\"error\":\"Server side error!\"}";
         }
-    @POST
-    @Path("Register")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String register{
-            @FormDataParam("userID") Integer userID, @FormDataParam("userName") String userName,
-        }
+    }
 
-
-
-    public static void insertUsers(int userID, String userName, String userPassword, String userEmail){//MMEHOD TO CREATE A NEW USER
+  /*  public static void insertUsers(int userID, String userName, String userPassword, String userEmail){//MMEHOD TO CREATE A NEW USER
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO USERS(userID, userName, userPassword, userEmail)VALUES (?,?,?,?)");//SQL STATEMENT TO CREATE A NEW USER
             ps.setInt(1,userID);//Pepared statement which links to the first ?
@@ -66,6 +58,8 @@ public class Users{
             System.out.println("Database Error");//SOUT which if the code doesnt work will be outputted
         }
     }
+
+   */
     public static void updateUsers(int userID, String userName,String userPassword, String userEmail){//METHOD TO UPDATE A USER
         try{
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET userName = ?,userPassword =?, userEmail = ? WHERE userID = ?");//SQL statement which updates USER
