@@ -11,17 +11,17 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-@Path("regions/")
+@Path("Regions/")
 public class Region {
     //APIS
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
     public String listRegions(){
-        System.out.println("regions/list");
+        System.out.println("Regions/list");
         JSONArray list = new JSONArray();
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT INTO REGION(regionID,regionName)VALUES (?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT regionID, regionName FROM Region");
             ResultSet results = ps.executeQuery();
             while(results.next()){
                 JSONObject item = new JSONObject();

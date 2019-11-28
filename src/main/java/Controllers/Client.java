@@ -20,21 +20,21 @@ public class Client {
     @Path("img/{path}")
     @Produces({"image/jpeg,image/png"})
     public byte[] getImageFile(@PathParam("path") String path) {
-        return getFile("client/img/" + path);
+        return getFile("Client/img/" + path);
     }
 
     @GET
     @Path("js/{path}")
     @Produces({"text/javascript"})
     public byte[] getJavaScriptFile(@PathParam("path") String path) {
-        return getFile("client/js/" + path);
+        return getFile("Client/js/" + path);
     }
 
     @GET
     @Path("css/{path}")
     @Produces({"text/css"})
     public byte[] getCSSFile(@PathParam("path") String path) {
-        return getFile("client/css/" + path);
+        return getFile("Client/css/" + path);
     }
 
     @GET

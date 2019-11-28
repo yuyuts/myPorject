@@ -40,12 +40,9 @@ public class Main {
         }
 
     }
-
-
-
     public static void main(String[] args) {
 
-        openDatabase("Client/LeagueDatabase.db");
+        openDatabase("LeagueDatabase.db");
 
         ResourceConfig config = new ResourceConfig();
         config.packages("Controllers");
