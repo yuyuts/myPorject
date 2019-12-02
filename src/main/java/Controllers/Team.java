@@ -1,10 +1,33 @@
 package Controllers;
 import Servers.Main;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+@Path("team/")
 public class Team{
+    @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listPlayers(){
+        System.out.println("team/list");
+        JSONArray = new JSONArray();
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID,ownerID FROM Teams");
+
+
+            JSONObject item = new JSONObject();
+        }
+    }
+
+
+
+    //
     public static void insertTeam(int teamID, String teamName,String Earnings, String teamBio, int teamAccountID){//METHOD to create a new team
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams(teamID, teamName, Earnings, teamBio, teamAccountID) VALUES(?,?,?,?,?)");//SQL STATEMENT TO CREATE A NEW TEAM
