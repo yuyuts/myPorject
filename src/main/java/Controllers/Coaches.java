@@ -5,6 +5,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.annotation.processing.Generated;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,34 +39,32 @@ public class Coaches {
             return"{\"error\":\"Unable to list items,please see server console for more info.\"}";
         }
     }
-    //GETTING ONE
-   /* @GET
+//get
+    @GET
     @Path("get/{coachID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCoach(@PathParam("coachID") Integer coachID){
-        if(coachID == null) {
-            throw new Exception("coachID is missing from the http request's url");
+    public String getUser(@Path("coachID") Integer coachID){
+        if(coachID ==null){
+            throw new Exception("Coach ID is missing from the HTTP requests URl.");
         }
-        System.out.println("Coaches/get/" + coachID);
+        System.out.println("users/get/"+coachID);
         JSONObject item = new JSONObject();
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN, coachFirstName, coachLastName, teamID FROM Coaches WHERE coachID = ?");
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN, coachFirstName, coachLastName, teamID FROM COACHES WHERE coachID = ?");
             ps.setInt(1, coachID);
             ResultSet results = ps.executeQuery();
-            if (results.next()) {
-                item.put("coachID", coachID);
-                item.put("coachIGN",results.getString(1));
-                item.put("coachFirstName", results.getString(2));
-                item.put("coachLastName", results.getString(3));
-                item.put("teamID", results.getInt(4));
+            if(results.next()){
+                item.put("id",coachID);
+                item.put("coachIGN", results.getString(2));
+
             }
             return item.toString();
-        } catch (Exception exception) {
-            System.out.println("Database Error");
-            return"{\"error\":\"Unable to get item, please see server console for more info.\"}";
+        }catch (Exception exception){
+            System.out.println("Database Error:"+ exception.getMessage());
+            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
-    }
-*/
+        }
+
 
     //insertCoach
     @POST

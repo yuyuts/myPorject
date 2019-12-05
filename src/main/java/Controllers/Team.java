@@ -16,12 +16,25 @@ public class Team{
     @Produces(MediaType.APPLICATION_JSON)
     public String listPlayers(){
         System.out.println("team/list");
-        JSONArray = new JSONArray();
+        JSONArray list = new JSONArray();
         try{
             PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID,ownerID FROM Teams");
-
-
-            JSONObject item = new JSONObject();
+            ResultSet results = ps.executeQuery();
+            while(results.next()){
+                JSONObject item = new JSONObject();
+                item.put("teamID", results.getInt(1));
+                item.put("teamName", results.getString(2));
+                item.put("Earnings", results.getString(3));
+                item.put("teamBio", results.getString(4));
+                item.put("StandingPO",results.getInt(5));
+                item.put("CoachID", results.getInt(6));
+                item.put("ownerID", results.getInt(7));
+                list.add(item);
+            }
+            return list.toString();
+        }catch(Exception exception){
+            System.out.println("Database Error:"+exception.getMessage());
+            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
     }
 

@@ -1,16 +1,16 @@
 package Controllers;
 
 import Servers.Main;
-import com.sun.jersey.multipart.FormDataParam;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
+@Path("users/")
 
 public class Users{
     //LOGIN API
@@ -42,6 +42,32 @@ public class Users{
         } catch (Exception exception) {
             System.out.println("Database Error during user/login");
             return "{\"error\":\"Server side error!\"}";
+        }
+    }
+
+    @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listUsers(){
+        System.out.println("users/list");
+        JSONArray list = new JSONArray();
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("SELECT userID, userName, userPassword, userEmail, token FROM Users");
+            ResultSet results = ps.executeQuery();
+            while(results.next()){
+                JSONObject item = new JSONObject();
+                item.put("userID",results.getInt(1));
+                item.put("User Name",results.getString(2));
+                item.put("User Password",results.getString(3));
+                item.put("Email",results.getString(4));
+                item.put("Token:", results.getString(5));
+                list.add(item);
+            }
+            return list.toString();
+        }catch (Exception exception){
+            System.out.println("Database Error:"+exception.getMessage());
+            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
+
         }
     }
 
@@ -85,7 +111,7 @@ public class Users{
         }
     }
 
-    public static void listUsers(){//METHOD TO LIST USERS
+    public static void listUser(){//METHOD TO LIST USERS
         try{
             PreparedStatement ps = Main.db.prepareStatement("SELECT userID,userName,userPassword,userEmail FROM Users");//SQL statement TO LIST ALL PLAYERS
             ResultSet results = ps.executeQuery();//IMPORT RESULT SET
