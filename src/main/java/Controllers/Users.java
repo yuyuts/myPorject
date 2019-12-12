@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
@@ -44,6 +45,43 @@ public class Users{
             return "{\"error\":\"Server side error!\"}";
         }
     }
+    //logout
+    @POST
+    @Path("logout")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String logoutUser(@CookieParam("token")String token) {
+        try {
+            System.out.println("user/logout");
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT userID FROM Users WHERE Token =?");
+            ps1.setString(1, token);
+            ResultSet logoutResults = ps1.executeQuery();
+            if (logoutResults.next()) {
+                int userID = logoutResults.getInt(1);
+                PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users set Token = NULL WHERE userID =?");
+                ps2.setInt(1, userID);
+                ps2.executeUpdate();
+                return "{\"status\"OK\"}";
+            } else {
+                return "{\"error\":\"Invalid token!\"}";
+            }
+        } catch (Exception exception) {
+            System.out.println("Database error during /user/logout:" + exception.getMessage());
+            return "{\"error\":\"Server side error!\"}";
+        }
+
+    }
+    public static boolean validToken(String token){
+        try{
+            PreparedStatement ps = Main.db.prepareStatement("SELECT userID FROM Users WHERE Token = ?");
+            ps.setString(1,token);
+            ResultSet logoutResults = ps.executeQuery();
+            return logoutResults.next();
+        }catch (Exception exception){
+            System.out.println("Database error during /user/logout:"+ exception.getMessage());
+            return false;
+        }
+    }
 
     @GET
     @Path("list")
@@ -52,7 +90,7 @@ public class Users{
         System.out.println("users/list");
         JSONArray list = new JSONArray();
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT userID, userName, userPassword, userEmail, token FROM Users");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT userID, userName, userPassword, userEmail, Token FROM Users");
             ResultSet results = ps.executeQuery();
             while(results.next()){
                 JSONObject item = new JSONObject();

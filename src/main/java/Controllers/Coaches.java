@@ -43,11 +43,11 @@ public class Coaches {
     @GET
     @Path("get/{coachID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUser(@Path("coachID") Integer coachID){
+    public String getUser(@PathParam("coachID") Integer coachID){
         if(coachID ==null){
             throw new Exception("Coach ID is missing from the HTTP requests URl.");
         }
-        System.out.println("users/get/"+coachID);
+        System.out.println("users/get/"+ coachID);
         JSONObject item = new JSONObject();
         try{
             PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN, coachFirstName, coachLastName, teamID FROM COACHES WHERE coachID = ?");
@@ -59,7 +59,7 @@ public class Coaches {
 
             }
             return item.toString();
-        }catch (Exception exception){
+        } catch (Exception exception){
             System.out.println("Database Error:"+ exception.getMessage());
             return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
@@ -72,7 +72,7 @@ public class Coaches {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String insertCoach(
-            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachIGN") String coachIGN, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID) {
+            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachIGN") String coachIGN, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID, @CookieParam("token")String token) {
         try {
             if (coachID == null ||coachIGN == null || coachFirstName == null || coachLastName == null || teamID == null) {
                 throw new Exception("One or more form data parameters are missing in the HTTP Request");
@@ -99,7 +99,7 @@ public class Coaches {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateCoach(
-            @FormDataParam("coachID") Integer coachID,@FormDataParam("coachIGN") String coachIGN,@FormDataParam("coachFirstName") String coachFirstName,@FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID){
+            @FormDataParam("coachID") Integer coachID,@FormDataParam("coachIGN") String coachIGN,@FormDataParam("coachFirstName") String coachFirstName,@FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID,@CookieParam("token")String token){
         try{
             if(coachID == null || coachIGN == null || coachFirstName == null || coachLastName == null || teamID == null){
                 throw new Exception("One or more form data parameters are missing from the HTTP request.");
