@@ -1,12 +1,12 @@
 package Controllers;
 
 import Servers.Main;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.print.attribute.standard.Media;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
@@ -34,6 +34,30 @@ public class Region {
             return"{\"error\"Unable to list items,please see server console for more info.\"}";
         }
     }
+
+    //Insert
+    @POST
+    @Path("new")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createRegion{
+        @FormDataParam("regionID") Integer regionID, @FormDataParam("regionName") String regionName){
+    try{
+        if(regionID == null||regionName == null|| regionName == null){
+            throw new Exception("One or more parameter were missing");
+        }
+        System.out.println("Regions/new regionID ="+regionID);
+        PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Things(regionID, regionName) VALUES(?,?)");
+        ps.setInt(1, regionID);
+        ps.setString(2,regionName);
+        ps.execute();
+        return"{\"status\":\"OK\")";
+    }catch (Exception exception);
+
+        }
+    }
+
+
 
 
 

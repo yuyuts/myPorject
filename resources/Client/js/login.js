@@ -1,6 +1,8 @@
+import * as Cookies from "./jszip";
+
 function pageLoad(){
     if(window.location.search ==='?logout'){
-        document.getElementById('content').innerHTML ='<h1> Logging Out</h1>;
+        document.getElementById('content').innerHTML ='<h1> Logging Out</h1>';
             logout();
     }else{
         document.getElementById("loginButton").addEventListener("click",login);

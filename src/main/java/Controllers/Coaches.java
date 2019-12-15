@@ -40,6 +40,7 @@ public class Coaches {
         }
     }
 //get
+ /*
     @GET
     @Path("get/{coachID}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +65,7 @@ public class Coaches {
             return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
         }
-
+ */
 
     //insertCoach
     @POST
