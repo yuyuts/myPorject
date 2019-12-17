@@ -1,0 +1,43 @@
+body{
+    background-color: lightpink;
+    margin : 0;
+    font-family: 'Helvetica','sans-serif' ;
+}
+h1{
+    margin-top: 0;
+}
+#content{
+    background-color: lightpink;
+    width: 1000px;
+    margin: 0 auto;
+    min-height: 600px;
+    padding:32px;
+
+
+}
+
+.loginDiv{
+    font-size: 14pt;
+    margin-top: 40px;
+    margin-left: 20px;
+
+}
+#username, #password{
+    margin-left: 20px;
+    font-size: 18pt;
+    background-color: white;
+}
+#loginButton{
+    width: 200px;
+    background-color: white;
+}
+#loginButton:hover{
+    background-color: lightblue;
+}
+#loggedInDetails{
+    margin:0;
+    text-align: center;
+    display: inline;
+    float: right;
+}
+
