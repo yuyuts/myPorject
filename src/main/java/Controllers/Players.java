@@ -1,8 +1,12 @@
 package Controllers;
 
 import Servers.Main;
+import javassist.bytecode.stackmap.BasicBlock;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.annotation.Target;
@@ -33,6 +37,109 @@ public class Players {
             return "{\"error\":\"unable to list items, please see server console for more info.\"}";
         }
     }
+    @GET
+    @Path("get/{playerID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPlayer(@PathParam("playerID") Integer playerID){
+        try{
+            if(playerID == null){
+                throw new Exception("playerID is missing in the HTTP request");
+            }
+            System.out.println("Players/get/"+ playerID);
+            JSONObject item = new JSONObject();
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerIGN,firstName, Nationality,playerBio FROM Player WHERE playerID =?");
+            ps.setInt(1,playerID);
+            ResultSet results = ps.executeQuery();
+            if(results.next()){
+                item.put("playerID", playerID);
+                item.put("playerIGN",results.getString(1));
+                item.put("firstName",results.getString(2));
+                item.put("Nationality",results.getString(3));
+                item.put("playerBio", results.getString(4));
+            }
+            return item.toString();
+        }catch(Exception exception){
+            System.out.println("Database Error:"+exception.getMessage());
+            return "{\"error\":\"unable to list items, please see server console for more info.\"}";
+        }
+    }
+
+    @POST
+    @Path("new")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String newOwners(
+            @FormDataParam("playerID") Integer playerID, @FormDataParam("playerIGN") String playerIGN, @FormDataParam("firstName") String firstName, @FormDataParam("Nationality") String Nationality,@FormDataParam("playerBio") String playerBio, @FormDataParam("regionID") Integer regionID, @FormDataParam("teamID") Integer teamID){
+        try{
+            if(playerID == null||playerIGN == null || firstName == null || Nationality == null || playerBio == null|| regionID == null|| teamID == null){
+                throw new Exception("One or more of the parameters are missing in the HTTP Request");
+            }
+            System.out.println("Owners/new:" + playerID);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Owners(playerID, playerIGN, firstName, Nationality, playerBio,regionID,teamID) VALUES (?,?,?,?,?,?,?)");
+            ps.setInt(1,playerID);
+            ps.setString(2,playerIGN);
+            ps.setString(3, firstName);
+            ps.setString(4, Nationality);
+            ps.setString(5,playerBio);
+            ps.setInt(6,regionID);
+            ps.setInt(7,teamID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        }catch(Exception exception){
+            System.out.println("Database Error:"+ exception.getMessage());
+            return "{\"error\":\"unable to add player please check console for more information\"}";
+        }
+    }
+
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updatePlayer(
+            @FormDataParam("playerID") Integer playerID, @FormDataParam("playerIGN") String playerIGN, @FormDataParam("firstName") String firstName, @FormDataParam("Nationality") String Nationality,@FormDataParam("playerBio") String playerBio, @FormDataParam("regionID") Integer regionID, @FormDataParam("teamID") Integer teamID){
+        try {
+            if(playerID == null||playerIGN == null || firstName == null || Nationality == null || playerBio == null|| regionID == null|| teamID == null){
+                throw new Exception("One or more form of data parameters are missing int he HTML request");
+            }
+            System.out.println("Players/update playerID="+playerID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Owners SET playerIGN =?, firstName = ?, Nationality =?, playerBio = ?, regionID = ?, teamID = ? WHERE playerID =?");
+            ps.setString(1, playerIGN);
+            ps.setString(2,firstName);
+            ps.setString(3, Nationality);
+            ps.setString(4,playerBio);
+            ps.setInt(5,regionID);
+            ps.setInt(6,teamID);
+            ps.setInt(7,playerID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        } catch (Exception exception){
+            System.out.println("Database Error" + exception.getMessage());
+            return "{\"error\":\"Unable to updatePlayer. Check console for more information\"}";
+        }
+    }
+
+    @POST
+    @Path("delete")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String removePlayer(
+            @FormDataParam("playerID") Integer playerID){
+        try{
+            if(playerID == null){
+                throw new Exception("one or more form data parameters are missing the HTTP request");
+            }
+            System.out.println("Players/delete playerID = ?" + playerID);
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM OWNERS WHERE playerID = ?");
+            ps.setInt(1,playerID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        }catch (Exception exception){
+            System.out.println("Database Error:" + exception.getMessage());
+            return "{\"error\":\"Unable to delete players. Check Console for more information\"}";
+        }
+    }
+
+
 
     public static void insertPlayer(int playerID, String playerIGN, String firstName, String Nationality,int teamID) {//calls for these parameters
         try {

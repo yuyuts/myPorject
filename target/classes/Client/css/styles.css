@@ -1,5 +1,5 @@
 body{
-    background-color: lightpink;
+    background-color: white;
     margin : 0;
     font-family: 'Helvetica','sans-serif' ;
 }
@@ -7,7 +7,7 @@ h1{
     margin-top: 0;
 }
 #content{
-    background-color: lightpink;
+    background-color: white;
     width: 1000px;
     margin: 0 auto;
     min-height: 600px;
@@ -40,4 +40,48 @@ h1{
     display: inline;
     float: right;
 }
+form.searchBar input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: white;
+}
+form.searchBar button {
+    float: left;
+    width: 178px;
+    height: 42px;
+    padding: 10px;
+    background: #2196F3;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+.theBox {
+    width: 1200px;
+    margin: 0 auto
+}
+.box {
+    width: 500px;
+    height: 500px;
+    display: inline-block;
+    vertical-align: middle;}
 
+.box {
+    font-family: 'Helvetica','sans-serif';
+    font-weight: 400;
+    margin: 0 auto 5px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    font-size: 100px;
+}
+.na-Box {
+    background-color: cornflowerblue;
+
+}
+.kr-Box{
+    background-color: peachpuff;
+}

@@ -6,9 +6,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.annotation.processing.Generated;
+import javax.print.attribute.standard.Media;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 @Path("Coaches/")
@@ -40,33 +42,33 @@ public class Coaches {
         }
     }
 //get
- /*
     @GET
     @Path("get/{coachID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUser(@PathParam("coachID") Integer coachID){
-        if(coachID ==null){
-            throw new Exception("Coach ID is missing from the HTTP requests URl.");
-        }
-        System.out.println("users/get/"+ coachID);
-        JSONObject item = new JSONObject();
+    public String getCoach(
+            @PathParam("coachID") Integer coachID){
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN, coachFirstName, coachLastName, teamID FROM COACHES WHERE coachID = ?");
-            ps.setInt(1, coachID);
+            if(coachID == null){
+                throw new Exception("CoachID is missing in the HTTP Request URL.");
+            }
+            System.out.println("Coaches/get/"+coachID);
+            JSONObject item = new JSONObject();
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN,coachFirstName, coachLastName,teamID FROM COACHES WHERE coachID = ?");
+            ps.setInt(1,coachID);
             ResultSet results = ps.executeQuery();
             if(results.next()){
-                item.put("id",coachID);
-                item.put("coachIGN", results.getString(2));
-
+                item.put("coachID",coachID);
+                item.put("coachIGN",results.getString(1));
+                item.put("coachFirstName",results.getString(2));
+                item.put("coachLastName",results.getString(3));
+                item.put("teamID",results.getInt(4));
             }
             return item.toString();
-        } catch (Exception exception){
+        }catch (Exception exception){
             System.out.println("Database Error:"+ exception.getMessage());
-            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
+            return"{\"error\":\"Unable to list items,please see server console for more info.\"}";
         }
-        }
- */
-
+    }
     //insertCoach
     @POST
     @Path("new")
@@ -119,6 +121,28 @@ public class Coaches {
             return "{\"error\":\"Unable to update item, please see the console for more info.\"}";
         }
     }
+    //delete coach
+    @POST
+    @Path("delete")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteThing(@FormDataParam("coachID") Integer coachID){
+        try{
+            if(coachID == null){
+                throw new Exception("One or more form data parameters are missing in the HTTP request.");
+            }
+            System.out.println("Coaches/delete=" +coachID);
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Coaches WHERE coachID =?");
+            ps.setInt(1,coachID);
+            ps.execute();
+            return "{\"status\":\"DELETED\"}";
+        }catch (Exception exception){
+            System.out.println("Database error:"+exception.getMessage());
+            return "{\"error\":\"Unable to delete item, please see server console for more info\"}";
+
+        }
+    }
+
 
 
 

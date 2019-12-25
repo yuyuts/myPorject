@@ -40,19 +40,43 @@ public class Region {
     @Path("new")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createRegion{
+    public String newRegion(
         @FormDataParam("regionID") Integer regionID, @FormDataParam("regionName") String regionName){
-    try{
-        if(regionID == null||regionName == null|| regionName == null){
-            throw new Exception("One or more parameter were missing");
+            try {
+                if (regionID == null || regionName == null ) {
+                    throw new Exception("One or more parameter were missing");
+                }
+                System.out.println("Regions/new regionID =" + regionID);
+                PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Things(regionID, regionName) VALUES(?,?)");
+                ps.setInt(1, regionID);
+                ps.setString(2, regionName);
+                ps.execute();
+                return "{\"status\": \"OK\"}";
+            } catch (Exception exception) {
+                System.out.println("Database Error" + exception.getMessage());
+                return "{\"error\"Unable to list items,please see server console for more info.\"}";
+            }
         }
-        System.out.println("Regions/new regionID ="+regionID);
-        PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Things(regionID, regionName) VALUES(?,?)");
-        ps.setInt(1, regionID);
-        ps.setString(2,regionName);
-        ps.execute();
-        return"{\"status\":\"OK\")";
-    }catch (Exception exception);
+        //Update Player
+    @POST
+    @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateRegion(
+            @FormDataParam("regionID") Integer regionID, @FormDataParam("regionName") String regionName){
+        try {
+            if(regionID == null|| regionName == null){
+                throw new Exception("One or more parameters are missing - Unable to execute HTML request");
+            }
+            System.out.println("Region/update regionID ="+regionID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Region SET regionName = ? WHERE regionID = ?");
+            ps.setString(1,regionName);
+            ps.setInt(2, regionID);
+            ps.execute();
+            return "{\"status\": \"OK\"}";
+        }catch (Exception exception){
+            System.out.println("Datbase Error:"+exception.getMessage());
+            return "{\"error\"Unable to update\"}";
 
         }
     }
