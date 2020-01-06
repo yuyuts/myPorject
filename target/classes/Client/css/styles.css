@@ -85,3 +85,54 @@ form.searchBar button {
 .kr-Box{
     background-color: peachpuff;
 }
+
+
+.editButton .deleteButton .saveButton .cancelButton{
+    color:black;
+    font-size:14px;
+    border: none;
+    border-radius: 8px;
+    transition-duration: 0.4s;
+}
+
+.editButton{
+    background-color:silver;
+}
+.editButton:hover{
+    background-color: grey;
+}
+#newButton{
+    background-color:cornflowerblue;
+}
+#newButton:hover{
+    background-color:blue;
+}
+.deleteButton,#cancelButton{
+    background-color: indianred;
+    margin-left: 10px;
+}
+.deleteButton:hover .cancelButton:hover{
+    background-color: firebrick;
+}
+#saveButton:hover{
+    background-color: forestgreen;
+}
+form div{
+    width:100px;
+    margin-bottom: 0;
+    display: inline-block;
+}
+.label{
+    width:100px;
+    margin-bottom: 0;
+    display: inline-block;
+}
+.floatRight{
+    float:right;
+}
+#editDiv{
+    display: none;
+}
+table{
+    width:100px;
+}

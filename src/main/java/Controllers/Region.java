@@ -47,7 +47,7 @@ public class Region {
                     throw new Exception("One or more parameter were missing");
                 }
                 System.out.println("Regions/new regionID =" + regionID);
-                PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Things(regionID, regionName) VALUES(?,?)");
+                PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Region (regionID, regionName) VALUES(?,?)");
                 ps.setInt(1, regionID);
                 ps.setString(2, regionName);
                 ps.execute();
@@ -75,7 +75,7 @@ public class Region {
             ps.execute();
             return "{\"status\": \"OK\"}";
         }catch (Exception exception){
-            System.out.println("Datbase Error:"+exception.getMessage());
+            System.out.println("Database Error:"+exception.getMessage());
             return "{\"error\"Unable to update\"}";
 
         }

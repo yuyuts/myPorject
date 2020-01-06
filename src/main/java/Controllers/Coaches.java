@@ -24,7 +24,7 @@ public class Coaches {
         System.out.println("Coaches/list");//API PATH
         JSONArray list = new JSONArray();//creating new JSON array
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachIGN,coachFirstName, coachLastName,teamID FROM COACHES");//SELECT SQL STATEMENT
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachID,coachIGN,coachFirstName, coachLastName FROM COACHES");//SELECT SQL STATEMENT
             JSONObject item = new JSONObject();
             ResultSet results= ps.executeQuery();//PREPARED STATEMENTS
             while(results.next()){//while loop, stops when there are no more coaches
@@ -32,7 +32,6 @@ public class Coaches {
                 item.put("CoachIGN",results.getString(2));//gets the coachIGN
                 item.put("coachFirstName",results.getString(3));//gets the coachFirstName
                 item.put("coachLastName",results.getString(4));//gets the coachLastName
-                item.put("teamID",results.getInt(5));//gets the teamID
                 list.add(item);
             }
             return list.toString();
@@ -53,7 +52,7 @@ public class Coaches {
             }
             System.out.println("Coaches/get/"+coachID);
             JSONObject item = new JSONObject();
-            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN,coachFirstName, coachLastName,teamID FROM COACHES WHERE coachID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT coachIGN,coachFirstName, coachLastName FROM COACHES WHERE coachID = ?");
             ps.setInt(1,coachID);
             ResultSet results = ps.executeQuery();
             if(results.next()){
@@ -61,7 +60,6 @@ public class Coaches {
                 item.put("coachIGN",results.getString(1));
                 item.put("coachFirstName",results.getString(2));
                 item.put("coachLastName",results.getString(3));
-                item.put("teamID",results.getInt(4));
             }
             return item.toString();
         }catch (Exception exception){
@@ -75,19 +73,18 @@ public class Coaches {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String insertCoach(
-            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachIGN") String coachIGN, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @FormDataParam("teamID") Integer teamID, @CookieParam("token")String token) {
+            @FormDataParam("coachID")Integer coachID, @FormDataParam("coachIGN") String coachIGN, @FormDataParam("coachFirstName") String coachFirstName, @FormDataParam("coachLastName") String coachLastName, @CookieParam("token")String token) {
         try {
-            if (coachID == null ||coachIGN == null || coachFirstName == null || coachLastName == null || teamID == null) {
+            if (coachID == null ||coachIGN == null || coachFirstName == null || coachLastName == null ) {
                 throw new Exception("One or more form data parameters are missing in the HTTP Request");
             }
             System.out.println("Coaches/new coachID =" + coachID);
 
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID,coachIGN, coachFirstName, coachLastName, teamID) VALUES (?,?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Coaches(coachID,coachIGN, coachFirstName, coachLastName) VALUES (?,?,?,?)");
             ps.setInt(1, coachID);
             ps.setString(2, coachIGN);
             ps.setString(3, coachFirstName);
             ps.setString(4, coachLastName);
-            ps.setInt(5,teamID);
             ps.execute();
             return "{\"status\": \"OK\"}";
         } catch (Exception exception) {
