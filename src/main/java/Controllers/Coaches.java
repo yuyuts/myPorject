@@ -4,13 +4,8 @@ import Servers.Main;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import javax.annotation.processing.Generated;
-import javax.print.attribute.standard.Media;
-import javax.validation.constraints.Positive;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 @Path("Coaches/")

@@ -5,10 +5,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 @Path("Regions/")
@@ -41,7 +39,10 @@ public class Region {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String newRegion(
-        @FormDataParam("regionID") Integer regionID, @FormDataParam("regionName") String regionName){
+        @FormDataParam("regionID") Integer regionID, @FormDataParam("regionName") String regionName,@CookieParam("token") String token){
+        if(!Users.validToken(token)){
+            return"{\"error\":\"you dont appear to be logged in\"}";
+        }
             try {
                 if (regionID == null || regionName == null ) {
                     throw new Exception("One or more parameter were missing");

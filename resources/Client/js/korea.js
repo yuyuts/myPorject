@@ -28,11 +28,11 @@ function  pageLoad() {
                 `<button class ='editButton' data-id='${team.id}'>EDIT</button>` +
                 `<button class ='deleteButton' data-id='${team.id}'>DELETE</button>` +
                 `</td>` +
-                '</tr>'
+                `</tr>`;
 
         }
         teamHTML += '</table>';
-        document.getElementById("listDiv").innerHTML = teamHTML;
+        document.getElementById("listKR").innerHTML = teamHTML;
         let editButtons = document.getElementsByClassName("editButton");
         for (let button of editButtons) {
             button.addEventListener("click", editTeam);
@@ -41,6 +41,7 @@ function  pageLoad() {
         for (let button of deleteButtons) {
             button.addEventListener("click", deleteTeam);
         }
+        checkLogin();
     });
     document.getElementById("saveButton").addEventListener("click", saveEditTeam);
     document.getElementById("cancelButton").addEventListener("click",cancelEditTeam);
@@ -58,8 +59,8 @@ function editTeam(event) {
         document.getElementById("standingPosition").value ='';
         document.getElementById("coachName").value ='';
         document.getElementById("ownerName").value='';
-        document.getElementById("listDiv").style.display ='none';
-        document.getElementById("editDiv").style.display ='block';
+        document.getElementById("listKR").style.display ='none';
+        document.getElementById("editKR").style.display ='block';
     }else{
         fetch('/team/get'+id,{method:'get'}
         ).then(response => response.json()
@@ -131,8 +132,8 @@ function saveEditTeam(event) {
         if(responseData.hasOwnProperty('error')){
             alert(responseData.error);
         }else{
-            document.getElementById("listDiv").style.display = 'block';
-            document.getElementById("editDiv").style.display= 'none';
+            document.getElementById("listKR").style.display = 'block';
+            document.getElementById("editKR").style.display= 'none';
             pageLoad();
         }
     }
@@ -140,8 +141,8 @@ function saveEditTeam(event) {
 }
 function cancelEditTeam(event) {
     event.preventDefault();
-    document.getElementById("listDiv").style.display ='block';
-    document.getElementById("editDiv").style.display ='none';
+    document.getElementById("listKR").style.display ='block';
+    document.getElementById("editKR").style.display ='none';
 }
 function deleteTeam(event){
     const ok = confirm("Are you sure?");
@@ -160,4 +161,6 @@ function deleteTeam(event){
             }
         )
     }
+
+
 }

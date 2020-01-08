@@ -19,20 +19,24 @@ public class Users{
     @Path("login")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String userLogin(@FormDataParam("userName")String userName,@FormDataParam("userPassword") String userPassword) {
+    public String userLogin(@FormDataParam("username")String username,@FormDataParam("password") String password) {
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT userPassword FROM Users WHERE userName =?");
-            ps.setString(1, userName);
-            ResultSet loginResults = ps.executeQuery();
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT password FROM Users WHERE username =?");
+            ps1.setString(1, username);
+            ResultSet loginResults = ps1.executeQuery();
             if (loginResults.next()) {
                 String correctPassword = loginResults.getString(1);
-                if (userPassword.equals(correctPassword)) {
+                if (password.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();
-                    PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Users SET Token =? WHERE userName =?");
-                    ps1.setString(1, token);
-                    ps1.setString(2, userName);
-                    ps1.executeUpdate();
-                    return "{\"token\":\"" + token + "\"}";
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token =? WHERE username =?");
+                    ps2.setString(1, token);
+                    ps2.setString(2, username);
+                    ps2.executeUpdate();
+
+                    JSONObject userDetails = new JSONObject();
+                    userDetails.put("username",username);
+                    userDetails.put("token",token);
+                    return userDetails.toString();
                 } else {
                     return "{\"error\":\"Incorrect password!\"}";
 
@@ -90,13 +94,13 @@ public class Users{
         System.out.println("users/list");
         JSONArray list = new JSONArray();
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT userID, userName, userPassword, userEmail, Token FROM Users");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT userID, username, password, userEmail, Token FROM Users");
             ResultSet results = ps.executeQuery();
             while(results.next()){
                 JSONObject item = new JSONObject();
                 item.put("userID",results.getInt(1));
                 item.put("User Name",results.getString(2));
-                item.put("User Password",results.getString(3));
+                item.put("Password",results.getString(3));
                 item.put("Email",results.getString(4));
                 item.put("Token:", results.getString(5));
                 list.add(item);
@@ -108,6 +112,9 @@ public class Users{
 
         }
     }
+
+
+
 
   /*  public static void insertUsers(int userID, String userName, String userPassword, String userEmail){//MMEHOD TO CREATE A NEW USER
         try{

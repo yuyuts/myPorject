@@ -10,80 +10,81 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 @Path("team/")
-public class Team{
+public class Team {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listPlayers(){
+    public String listPlayers() {
         System.out.println("team/list");
         JSONArray list = new JSONArray();
-        try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID FROM Teams");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID, image  FROM Teams");
             ResultSet results = ps.executeQuery();
-            while(results.next()){
+            while (results.next()) {
                 JSONObject item = new JSONObject();
                 item.put("teamID", results.getInt(1));
                 item.put("teamName", results.getString(2));
                 item.put("Earnings", results.getString(3));
                 item.put("teamBio", results.getString(4));
-                item.put("StandingPO",results.getInt(5));
+                item.put("StandingPO", results.getInt(5));
                 item.put("CoachID", results.getInt(6));
                 item.put("ownerID", results.getInt(7));
-                item.put("regionID",results.getInt(8));
+                item.put("regionID", results.getInt(8));
+                item.put("Image",results.getString(9));
                 list.add(item);
             }
             return list.toString();
-        }catch(Exception exception){
-            System.out.println("Database Error:"+exception.getMessage());
-            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
+        } catch (Exception exception) {
+            System.out.println("Database Error:" + exception.getMessage());
+            return "{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
     }
+
+    /*
     @GET
     @Path("get/{regionID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String regionList(
-            @FormDataParam("regionID") Integer regionID){
+    public String getRegion(@PathParam("regionID") Integer regionID){
         try{
             if(regionID == null){
-                throw new Exception("regionID is missing");
+                throw new Exception("The regionID is missing in the HTTP request URl");
             }
-            System.out.println("regionID/get:"+regionID);
-            JSONArray list = new JSONArray();
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID, ownerID FROM Teams WHERE regionID =?");
-            ResultSet results = ps.executeQuery();
-            while (results.next()){
-                JSONObject item = new JSONObject();
+            System.out.println("regionID/get"+regionID);
+            JSONObject item = new JSONObject();
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo coachID, ownerID FROM Teams where regionID = ?");
+            ps.setInt(1,regionID);
+            ResultSet result = ps.executeQuery();
+            while (result.next()){
                 item.put("regionID", regionID);
-                item.put("teamID", results.getInt(1));
-                item.put("teamName",results.getString(2));
-                item.put("Earnings",results.getString(4));
-                item.put("teamBio", results.getString(4));
-                item.put("StandingPo", results.getString(5));
-                item.put("coachID", results.getInt(6));
-                item.put("ownerID", results.getInt(7));
-                list.add(item);
+                item.put("teamID", result.getInt(1));
+                item.put("teamName", result.getString(2));
+                item.put("Earnings",result.getString(3));
+                item.put("teamBio",result.getString(4));
+                item.put("standingPO",result.getString(5));
+                item.put("coachID",result.getInt(6));
+                item.put("ownerID",result.getInt(7));
             }
-            return list.toString();
+            return item.toString();
         }catch (Exception exception){
             System.out.println("Database Error:"+exception.getMessage());
             return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
-
     }
+*/
     @GET
     @Path("get/{teamID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTeam(@PathParam("teamID") Integer teamID){
+    public String getTeam(@PathParam("teamID") Integer teamID) {
         try {
-            if(teamID == null){
+            if (teamID == null) {
                 throw new Exception("team ID is missing in HTTP requests URL");
             }
-            System.out.println("teamID/get"+teamID);
+            System.out.println("teamID/get" + teamID);
             JSONObject item = new JSONObject();
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID FROM Teams where  teamID  =?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID, image FROM Teams where  teamID  =?");
             ps.setInt(1, teamID);
             ResultSet results = ps.executeQuery();
-            if(results.next()){
+            if (results.next()) {
                 item.put("teamID", teamID);
                 item.put("teamName", results.getString(1));
                 item.put("Earnings", results.getString(2));
@@ -92,11 +93,12 @@ public class Team{
                 item.put("coachID", results.getInt(5));
                 item.put("ownerID", results.getInt(6));
                 item.put("regionID", results.getInt(7));
+                item.put("Image",results.getString(8));
             }
             return item.toString();
-        }catch (Exception exception){
-            System.out.println("Database Error:"+exception.getMessage());
-            return"{\"error\":\"Unable to list items, please see server console for more info .\"}";
+        } catch (Exception exception) {
+            System.out.println("Database Error:" + exception.getMessage());
+            return "{\"error\":\"Unable to list items, please see server console for more info .\"}";
         }
     }
 
@@ -105,53 +107,59 @@ public class Team{
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String newTeam(
-            @FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID,@FormDataParam("regionID") Integer regionID){
-        try{
-            if(teamID == null||teamName == null||Earnings == null||teamBio == null|| Earnings == null|| standingPO == null || ownerID == null || coachID == null || regionID == null){
+            @FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
+        if (!Users.validToken(token)) {
+            return "{\"error\":\"you dont appear to be logged in\"}";
+        }
+        try {
+            if (teamID == null || teamName == null || Earnings == null || teamBio == null || Earnings == null || standingPO == null || ownerID == null || coachID == null || regionID == null) {
                 throw new Exception("One or more of the parameters are missing in the HTTP request");
             }
             System.out.println("team/new=" + teamID);
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams (teamID, teamName, Earnings, teamBio, standingPO ownerID, coachID, regioNID) VALUES (?,?,?,?,?,?,?,?)");
-            ps.setInt(1,teamID);
-            ps.setString(2,teamName);
-            ps.setString(3,Earnings);
-            ps.setString(4,teamBio);
-            ps.setString(5,standingPO);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams (teamID, teamName, Earnings, teamBio, standingPO ownerID, coachID, regionID, Image) VALUES (?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, teamID);
+            ps.setString(2, teamName);
+            ps.setString(3, Earnings);
+            ps.setString(4, teamBio);
+            ps.setString(5, standingPO);
             ps.setInt(6, ownerID);
-            ps.setInt(7,coachID);
-            ps.setInt(8,regionID);
+            ps.setInt(7, coachID);
+            ps.setInt(8, regionID);
+            ps.setString(9,image);
             ps.execute();
             return "{\"status\": \"OK\"}";
-        } catch (Exception exception){
-            System.out.println("Database Error:"+exception.getMessage());
-            return"{\"error\":\"Unable to create new item, check console for more info.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database Error:" + exception.getMessage());
+            return "{\"error\":\"Unable to create new item, check console for more info.\"}";
 
         }
     }
+
     @POST
     @Path("update")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateTeam(@FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID,@FormDataParam("regionID") Integer regionID){
-        try{
-            if(teamID == null||teamName == null||Earnings == null||teamBio == null|| Earnings == null|| standingPO == null || ownerID == null || coachID == null || regionID == null){
+    public String updateTeam(@FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
+        try {
+            if (teamID == null || teamName == null || Earnings == null || teamBio == null || Earnings == null || standingPO == null || ownerID == null || coachID == null || regionID == null) {
                 throw new Exception("One or more data paramerters are missing in the HTTP request");
             }
-            System.out.print("team/update teamID:"+ teamID);
+            System.out.print("team/update teamID:" + teamID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Teams SET teamName =? teamEarnings = ?, teamBio =?, Earnings =?, standingPO =?,ownerID = ?, coachID = ?, regionID =? WHERE teamID = ?");
-            ps.setString(1,teamName);
-            ps.setString(2,teamBio);
-            ps.setString(3,Earnings);
-            ps.setString(4,standingPO);
-            ps.setInt(5,ownerID);
-            ps.setInt(6,coachID);
-            ps.setInt(7,regionID);
-            ps.setInt(8,teamID);
+            ps.setString(1, teamName);
+            ps.setString(2, teamBio);
+            ps.setString(3, Earnings);
+            ps.setString(4, standingPO);
+            ps.setInt(5, ownerID);
+            ps.setInt(6, coachID);
+            ps.setInt(7, regionID);
+            ps.setInt(8, teamID);
+            ps.setString(9,image);
             ps.execute();
             return "{\"status\": \"OK\"}";
-        }catch (Exception exception){
-            System.out.println("Database Error:"+ exception.getMessage());
-            return"{\"error\":\"Unable to update item, please see server console for more info.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database Error:" + exception.getMessage());
+            return "{\"error\":\"Unable to update item, please see server console for more info.\"}";
 
         }
     }
@@ -162,7 +170,7 @@ public class Team{
     @Produces(MediaType.APPLICATION_JSON)
     public String removeTeam(@FormDataParam("teamID") Integer teamID) {
         try {
-            if (teamID == null){
+            if (teamID == null) {
                 throw new Exception("one data parameters are missing in the HTTP request");
             }
             System.out.println("team/delete id=" + teamID);
@@ -175,6 +183,7 @@ public class Team{
             return "{\"error\":\"Unable to delete items, please see server console for more info\"}";
         }
     }
+}
 
 
 
@@ -183,7 +192,7 @@ public class Team{
 
 
 
-    //
+    /*
     public static void insertTeam(int teamID, String teamName,String Earnings, String teamBio, int teamAccountID){//METHOD to create a new team
         try{
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams(teamID, teamName, Earnings, teamBio, teamAccountID) VALUES(?,?,?,?,?)");//SQL STATEMENT TO CREATE A NEW TEAM
@@ -256,5 +265,5 @@ public class Team{
     }
 
 
-
+*/
 
