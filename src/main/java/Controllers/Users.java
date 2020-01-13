@@ -15,16 +15,16 @@ import java.util.UUID;
 
 public class Users{
     //LOGIN API
-    @POST
-    @Path("login")
+    @POST//post because it uses private information
+    @Path("login")//path for the API
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String userLogin(@FormDataParam("username")String username,@FormDataParam("password") String password) {
+    public String userLogin(@FormDataParam("username")String username,@FormDataParam("password") String password) { //these are the parameters need for the API
         try {
-            PreparedStatement ps1 = Main.db.prepareStatement("SELECT password FROM Users WHERE username =?");
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT password FROM Users WHERE username =?"); //SQL SELECT statement getting password from the username entered in the parameter
             ps1.setString(1, username);
             ResultSet loginResults = ps1.executeQuery();
-            if (loginResults.next()) {
+            if (loginResults.next()) { //if statement
                 String correctPassword = loginResults.getString(1);
                 if (password.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();

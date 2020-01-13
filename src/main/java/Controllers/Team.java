@@ -18,7 +18,7 @@ public class Team {
         System.out.println("team/list");
         JSONArray list = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID, image  FROM Teams");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamID, teamName, Earnings, teamBio, standingPo, coachID,ownerID,regionID, image  FROM Teams");
             ResultSet results = ps.executeQuery();
             while (results.next()) {
                 JSONObject item = new JSONObject();
@@ -81,7 +81,7 @@ public class Team {
             }
             System.out.println("teamID/get" + teamID);
             JSONObject item = new JSONObject();
-            PreparedStatement ps = Main.db.prepareStatement("SELECT teamName, Earnings, teamBio, StandingPo, coachID,ownerID,regionID, image FROM Teams where  teamID  =?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT teamName, Earnings, teamBio, standingPo, coachID,ownerID,regionID, image FROM Teams where  teamID  =?");
             ps.setInt(1, teamID);
             ResultSet results = ps.executeQuery();
             if (results.next()) {
