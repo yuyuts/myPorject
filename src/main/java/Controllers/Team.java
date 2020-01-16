@@ -26,8 +26,8 @@ public class Team {
                 item.put("teamName", results.getString(2));
                 item.put("Earnings", results.getString(3));
                 item.put("teamBio", results.getString(4));
-                item.put("StandingPO", results.getInt(5));
-                item.put("CoachID", results.getInt(6));
+                item.put("standingPo", results.getString(5));
+                item.put("coachID", results.getInt(6));
                 item.put("ownerID", results.getInt(7));
                 item.put("regionID", results.getInt(8));
                 item.put("Image",results.getString(9));
@@ -89,7 +89,7 @@ public class Team {
                 item.put("teamName", results.getString(1));
                 item.put("Earnings", results.getString(2));
                 item.put("teamBio", results.getString(3));
-                item.put("StandingPo", results.getString(4));
+                    item.put("StandingPo", results.getString(4));
                 item.put("coachID", results.getInt(5));
                 item.put("ownerID", results.getInt(6));
                 item.put("regionID", results.getInt(7));
@@ -107,21 +107,21 @@ public class Team {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String newTeam(
-            @FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
+            @FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPo") String standingPo, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
         if (!Users.validToken(token)) {
             return "{\"error\":\"you dont appear to be logged in\"}";
         }
         try {
-            if (teamID == null || teamName == null || Earnings == null || teamBio == null || Earnings == null || standingPO == null || ownerID == null || coachID == null || regionID == null) {
+            if (teamID == null || teamName == null || Earnings == null || teamBio == null || Earnings == null || standingPo == null || ownerID == null || coachID == null || regionID == null) {
                 throw new Exception("One or more of the parameters are missing in the HTTP request");
             }
             System.out.println("team/new=" + teamID);
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams (teamID, teamName, Earnings, teamBio, standingPO ownerID, coachID, regionID, Image) VALUES (?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Teams (teamID, teamName, Earnings, teamBio, standingPo ownerID, coachID, regionID, Image) VALUES (?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, teamID);
             ps.setString(2, teamName);
             ps.setString(3, Earnings);
             ps.setString(4, teamBio);
-            ps.setString(5, standingPO);
+            ps.setString(5, standingPo);
             ps.setInt(6, ownerID);
             ps.setInt(7, coachID);
             ps.setInt(8, regionID);
@@ -139,17 +139,17 @@ public class Team {
     @Path("update")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateTeam(@FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPO") String standingPO, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
+    public String updateTeam(@FormDataParam("teamID") Integer teamID, @FormDataParam("teamName") String teamName, @FormDataParam("Earnings") String Earnings, @FormDataParam("teamBio") String teamBio, @FormDataParam("standingPo") String standingPo, @FormDataParam("coachID") Integer coachID, @FormDataParam("ownerID") Integer ownerID, @FormDataParam("regionID") Integer regionID,@FormDataParam("image") String image, @CookieParam("token") String token) {
         try {
-            if (teamID == null || teamName == null || Earnings == null || teamBio == null || Earnings == null || standingPO == null || ownerID == null || coachID == null || regionID == null) {
+            if (teamID == null || teamName == null || Earnings == null || teamBio == null  || standingPo == null || ownerID == null || coachID == null || regionID == null) {
                 throw new Exception("One or more data paramerters are missing in the HTTP request");
             }
             System.out.print("team/update teamID:" + teamID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Teams SET teamName =? teamEarnings = ?, teamBio =?, Earnings =?, standingPO =?,ownerID = ?, coachID = ?, regionID =? WHERE teamID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Teams SET teamName =? teamEarnings = ?, teamBio =?, Earnings =?, standingPo =?,ownerID = ?, coachID = ?, regionID =? WHERE teamID = ?");
             ps.setString(1, teamName);
             ps.setString(2, teamBio);
             ps.setString(3, Earnings);
-            ps.setString(4, standingPO);
+            ps.setString(4, standingPo);
             ps.setInt(5, ownerID);
             ps.setInt(6, coachID);
             ps.setInt(7, regionID);

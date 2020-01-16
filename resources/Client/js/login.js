@@ -35,7 +35,6 @@ function logout() {
             } else {
                 Cookies.remove("username");
                 Cookies.remove("token");
-                window.location.href = '/client/korea.html';
                 window.location.href ='/client/index.html';
             }
         }

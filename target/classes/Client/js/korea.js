@@ -9,24 +9,26 @@ function  pageLoad() {
         '<th>Standing</th>'+
         '<th>Coach</th>' +
         '<th>Owner</th>'+
+        '<th>Region</th>'+
         '</tr>';
     fetch('/team/list', {method: 'get'}
     ).then(response => response.json()
     ).then(teams => {
         for (let team of teams) {
             teamHTML += '<tr>' +
-                `<td>${team.id}</td>` +
-                `<td><img src ='/client/img/${team.image}'
-                    alt ='Picture of ${team.name}' height ='100px'></td>` +
-                `<td>${team.name}</td>` +
-                `<td>${team.earnings}</td>` +
-                `<td>${team.bio}</td>` +
-                `<td>${team.position}</td>` +
-                `<td>${team.coach}</td>` +
-                `<td>${team.owner}</td>` +
+                `<td>${team.teamID}</td>` +
+                `<td><img src ='/client/img/${team.Image}'
+                    alt ='Picture of ${team.teamName}' height ='100px'></td>` +
+                `<td>${team.teamName}</td>` +
+                `<td>${team.Earnings}</td>` +
+                `<td>${team.teamBio}</td>` +
+                `<td>${team.standingPo}</td>` +
+                `<td>${team.coachID}</td>` +
+                `<td>${team.ownerID}</td>` +
+                `<td>${team.regionID}</td>`+
                 `<td class ='last'>` +
-                `<button class ='editButton' data-id='${team.id}'>EDIT</button>` +
-                `<button class ='deleteButton' data-id='${team.id}'>DELETE</button>` +
+                `<button class ='editButton' data-id='${team.teamID}'>EDIT</button>` +
+                `<button class ='deleteButton' data-id='${team.teamID}'>DELETE</button>` +
                 `</td>` +
                 `</tr>`;
 
@@ -51,33 +53,39 @@ function editTeam(event) {
     const  id = event.target.getAttribute("data-id");
     if(id === null){
         document.getElementById("editHeading").innerHTML ='Add a new Team:';
-        document.getElementById("teamID").value = '';
-        document.getElementById("teamImage").value='';
-        document.getElementById("teamName").value ='';
-        document.getElementById("teamEarnings").value='';
-        document.getElementById("teamBio").value ='';
-        document.getElementById("standingPosition").value ='';
-        document.getElementById("coachName").value ='';
-        document.getElementById("ownerName").value='';
+
+        document.getElementById("teamID").value = ' ';
+        document.getElementById("teamImage").value=' ';
+        document.getElementById("teamName").value =' ';
+        document.getElementById("teamEarnings").value=' ';
+        document.getElementById("teamBio").value =' ';
+        document.getElementById("standingPosition").value =' ';
+        document.getElementById("coachName").value =' ';
+        document.getElementById("ownerName").value=' ';
+        document.getElementById("regionID").value=' ';
         document.getElementById("listKR").style.display ='none';
         document.getElementById("editKR").style.display ='block';
+
     }else{
-        fetch('/team/get'+id,{method:'get'}
+        fetch('/team/get/'+id,{method:'get'}
         ).then(response => response.json()
         ).then(team=>{
             if(team.hasOwnProperty('error')){
                 alert(team.error);
             }else{
-                document.getElementById("editHeading").innerHTML = 'Editing'+ team.name+ ':';
-                document.getElementById("teamID").value = id;
-                document.getElementById("teamImage").value = team.image;
+                document.getElementById("editHeading").innerHTML = 'Editing'+ team.teamName+ ':';
+                document.getElementById("teamID").value = team.teamID;
+                document.getElementById("teamImage").value = team.Image;
                 document.getElementById("teamName").value = team.name;
-                document.getElementById("teamEarnings").value = team.earnings;
-                document.getElementById("teamBio").value = team.bio;
-                document.getElementById("StandingPosition").value = team.position;
-                document.getElementById("coachName").value = team.coach;
-                document.getElementById("ownerName").value= team.owner;
+                document.getElementById("teamEarnings").value = team.Earnings;
+                document.getElementById("teamBio").value = team.teamBio;
+                document.getElementById("StandingPosition").value = team.standingPo;
+                document.getElementById("coachName").value = team.coachID;
+                document.getElementById("ownerName").value= team.ownerID;
+                document.getElementById("regionName").value= team.regionID;
 
+                document.getElementById("listKR").style.display ='none';
+                document.getElementById("editKR").style.display ='block';
 
             }
 
@@ -116,12 +124,16 @@ function saveEditTeam(event) {
         alert("please provide the owner of the team")
         return;
     }
-    const id = document.getElementById("teamID").value;
-    const form = document.getElementById("teamForm")
+    if(document.getElementById("regionName").value.trim()==''){
+        alert("please provide the owner of the team")
+        return;
+    }
+    const teamID = document.getElementById("teamID").value;
+    const form = document.getElementById("krForm")
     const formData = new FormData(form);
 
     let apiPath = '';
-    if(id ===''){
+    if(teamID ===''){
         apiPath ='/team/new';
     }else{
         apiPath ='/team/update';
@@ -147,9 +159,9 @@ function cancelEditTeam(event) {
 function deleteTeam(event){
     const ok = confirm("Are you sure?");
     if(ok == true){
-        let id = event.target.getAttribute("data-id");
+        let teamID = event.target.getAttribute("data-id");
         let formData = new FormData();
-        formData.append("id", id);
+        formData.append("teamID", teamID);
         fetch('/team/delete',{method: 'post',body:formData}
         ).then(response => response.json()
         ).then(responseData =>{
@@ -161,6 +173,7 @@ function deleteTeam(event){
             }
         )
     }
+    checkLogin();
 
 
 }
