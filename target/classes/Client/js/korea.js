@@ -132,8 +132,8 @@ function saveEditTeam(event) {
     const form = document.getElementById("krForm")
     const formData = new FormData(form);
 
-    let apiPath = '';
-    if(teamID ===''){
+    let apiPath = ' ';
+    if(teamID ===' '){
         apiPath ='/team/new';
     }else{
         apiPath ='/team/update';

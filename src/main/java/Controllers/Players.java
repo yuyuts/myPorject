@@ -16,48 +16,49 @@ public class Players {
     @Produces(MediaType.APPLICATION_JSON)//we are using JSON
     public String listPlayers() {
         System.out.println("players/list"); // Additional Print Statements for debugging purposes
-        JSONArray list = new JSONArray(); //SIMPLE JSON QUERY - A new JSON Object is created
+        JSONArray list = new JSONArray(); //A new json array is constructed with a series of json objects with values from sql query.
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT playerID, playerIGN,firstName, Nationality,playerBio FROM Player");//sql Code
-            JSONObject item = new JSONObject();
+            JSONObject item = new JSONObject();//new json object
             ResultSet results = ps.executeQuery();
-            while (results.next()) {
-                item.put("playerID", results.getInt(1));
-                item.put("playerIGN", results.getString(2));
-                item.put("firstName", results.getString(3));
-                item.put("Nationality", results.getString(4));
-                item.put("playerBio",results.getString(5));
+            while (results.next()) {//while loop till there are no more teams
+                item.put("playerID", results.getInt(1));//links to playerID in sql statement
+                item.put("playerIGN", results.getString(2));//links to playerIGN in sql statement
+                item.put("firstName", results.getString(3));//links to firstName in sql statement
+                item.put("Nationality", results.getString(4));//links to nationality in sql statement
+                item.put("playerBio",results.getString(5));//links to player bio in sql statement
                 list.add(item);
-            }return list.toString();
-        } catch (Exception exception) {
+            }return list.toString();//returns list
+        } catch (Exception exception) { //if there is an error
             System.out.println("Database error:" + exception.getMessage());
-            return "{\"error\":\"unable to list items, please see server console for more info.\"}";
+            return "{\"error\":\"unable to list items, please see server console for more info.\"}";//returns error message
         }
     }
-    @GET
-    @Path("get/{playerID}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getPlayer(@PathParam("playerID") Integer playerID){
+
+    @GET// this API selects and lists a player depending on the playerID is inputted
+    @Path("get/{playerID}")//path
+    @Produces(MediaType.APPLICATION_JSON)//json
+    public String getPlayer(@PathParam("playerID") Integer playerID){//path param is used for playerID because the value is directed straight to the end of the HTTP request
         try{
-            if(playerID == null){
-                throw new Exception("playerID is missing in the HTTP request");
+            if(playerID == null){//if the plyaerID doesnt exist
+                throw new Exception("playerID is missing in the HTTP request");//error message
             }
-            System.out.println("Players/get/"+ playerID);
-            JSONObject item = new JSONObject();
-            PreparedStatement ps = Main.db.prepareStatement("SELECT playerIGN,firstName, Nationality,playerBio FROM Player WHERE playerID =?");
-            ps.setInt(1,playerID);
+            System.out.println("Players/get/"+ playerID);//SOUT for debugging purposes
+            JSONObject item = new JSONObject();//new JSON object is constructed with values from the sql query.
+            PreparedStatement ps = Main.db.prepareStatement("SELECT playerIGN,firstName, Nationality,playerBio FROM Player WHERE playerID =?");//select sql statement
+            ps.setInt(1,playerID);// the playerID value
             ResultSet results = ps.executeQuery();
-            if(results.next()){
-                item.put("playerID", playerID);
-                item.put("playerIGN",results.getString(1));
-                item.put("firstName",results.getString(2));
-                item.put("Nationality",results.getString(3));
-                item.put("playerBio", results.getString(4));
+            if(results.next()){//if statment not a while since its only one item
+                item.put("playerID", playerID);//links to the playerID in the sql statement
+                item.put("playerIGN",results.getString(1));//links to the playerIGn in the sql statement
+                item.put("firstName",results.getString(2));//links to the firstName in the sql statement
+                item.put("Nationality",results.getString(3));//links to the Nationality in the sql statment
+                item.put("playerBio", results.getString(4));//links to playerBio in the SQL Stamtent
             }
-            return item.toString();
-        }catch(Exception exception){
+            return item.toString();//returns item
+        }catch(Exception exception){//goes to this if an error occurs
             System.out.println("Database Error:"+exception.getMessage());
-            return "{\"error\":\"unable to list items, please see server console for more info.\"}";
+            return "{\"error\":\"unable to list items, please see server console for more info.\"}";//returns error message
         }
     }
 
